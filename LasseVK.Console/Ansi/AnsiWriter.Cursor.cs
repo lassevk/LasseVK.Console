@@ -109,7 +109,8 @@ public partial class AnsiWriter<T>
 
     public T ClearToEndOfScreen() => ClearScreen(ClearScreenBehavior.FromCursorToEndOfScreen);
     public T ClearToBeginningOfScreen() => ClearScreen(ClearScreenBehavior.FromCursorToBeginningOfScreen);
-    public T ClearEntireScreen() => ClearScreen(ClearScreenBehavior.EntireScreen);
+    public T ClearEntireScreen() => ClearScreen(ClearScreenBehavior.EntireScreen).MoveTo();
+
     public T ClearEntireScreenAndClearScrollbackBuffer() => ClearScreen(ClearScreenBehavior.EntireScreenAndClearScrollbackBuffer);
 
     public T ClearScreen(ClearScreenBehavior behavior)

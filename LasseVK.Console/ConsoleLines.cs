@@ -92,6 +92,9 @@ public class ConsoleLines : IDisposable
 
     public void Clear()
     {
+
+        // TODO: What if Ctrl+C is pressed during writing of line N? Then cursor is not at the
+        // end of the lines, and the move command below will move incorrectly.
         _ansiWriter.HideCursor();
         for (int index = _lines.Count - 1; index >= 0; index--)
         {

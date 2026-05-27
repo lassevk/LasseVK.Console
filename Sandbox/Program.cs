@@ -2,6 +2,9 @@
 using System.Globalization;
 
 using LasseVK.Console;
+using LasseVK.Console.Ansi;
+
+Console.Out.WithAnsi().ClearEntireScreen();
 
 using var lines = new ConsoleLines(10);
 
