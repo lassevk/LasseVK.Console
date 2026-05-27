@@ -1,26 +1,9 @@
 ﻿
-using System.Globalization;
-
 using LasseVK.Console;
-using LasseVK.Console.Ansi;
 
-Console.Out.WithAnsi().ClearEntireScreen();
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-using var lines = new ConsoleLines(10);
-
-traverse(@"/Users/lassevk/Dev");
-
-void traverse(string folderPath)
+for (int i = 0; i <= 100; i++)
 {
-    lines.ScrollDownAndAppend(folderPath);
-
-    foreach (string subFolderPath in Directory.GetDirectories(folderPath))
-    {
-        traverse(subFolderPath);
-    }
-
-    // foreach (string filePath in Directory.GetFiles(folderPath))
-    // {
-    //     lines.ScrollDownAndAppend(filePath);
-    // }
+    Console.WriteLine($"{i:000}: {ProgressBar.Format(i, 100)}");
 }
