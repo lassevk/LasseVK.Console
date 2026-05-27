@@ -9,18 +9,21 @@ public class AnsiTextWriter : AnsiWriter<AnsiTextWriter>
         _textWriter = textWriter ?? throw new ArgumentNullException(nameof(textWriter));
     }
 
-    protected override void Write(string text)
+    protected override AnsiTextWriter Write(string text)
     {
         _textWriter.Write(text);
+        return this;
     }
 
-    protected override void Write(int value)
+    protected override AnsiTextWriter Write(int value)
     {
         _textWriter.Write(value);
+        return this;
     }
 
-    protected override void Write<TValue>(TValue value)
+    protected override AnsiTextWriter Write<TValue>(TValue value)
     {
         _textWriter.Write(value);
+        return this;
     }
 }

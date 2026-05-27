@@ -6,4 +6,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Update="Ansi\AnsiWriter.Cursor.cs">
+        <DependentUpon>AnsiWriter.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Ansi\AnsiWriter.Rendering.cs">
+        <DependentUpon>AnsiWriter.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

@@ -11,18 +11,21 @@ public class AnsiStringBuilder : AnsiWriter<AnsiStringBuilder>
         _stringBuilder = stringBuilder ?? throw new ArgumentNullException(nameof(stringBuilder));
     }
 
-    protected override void Write(string text)
+    protected override AnsiStringBuilder Write(string text)
     {
         _stringBuilder.Append(text);
+        return this;
     }
 
-    protected override void Write(int value)
+    protected override AnsiStringBuilder Write(int value)
     {
         _stringBuilder.Append(value);
+        return this;
     }
 
-    protected override void Write<TValue>(TValue value)
+    protected override AnsiStringBuilder Write<TValue>(TValue value)
     {
         _stringBuilder.Append(value);
+        return this;
     }
 }

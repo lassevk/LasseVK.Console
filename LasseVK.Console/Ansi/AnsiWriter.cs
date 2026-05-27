@@ -3,17 +3,17 @@ using System.Text;
 
 namespace LasseVK.Console.Ansi;
 
-public abstract class AnsiWriter<T>
+public abstract partial class AnsiWriter<T>
     where T : AnsiWriter<T>
 {
-    private void Write([InterpolatedStringHandlerArgument("")] ref AppendHandler handler)
-    {
-        // Do nothing
-    }
+    private T Write([InterpolatedStringHandlerArgument("")] ref AppendHandler handler) =>
 
-    protected abstract void Write(string text);
-    protected abstract void Write(int value);
-    protected abstract void Write<TValue>(TValue value);
+        // Do nothing
+        (T)this;
+
+    protected abstract T Write(string text);
+    protected abstract T Write(int value);
+    protected abstract T Write<TValue>(TValue value);
 
     [InterpolatedStringHandler]
     public readonly ref struct AppendHandler
@@ -43,24 +43,5 @@ public abstract class AnsiWriter<T>
         {
             _writer.Write(i);
         }
-    }
-
-    public T MoveUp(int amount = 1)
-    {
-        ArgumentOutOfRangeException.ThrowIfLessThan(amount, 0);
-
-        if (amount == 0)
-        {
-            return (T)this;
-        }
-
-        if (amount == 1)
-        {
-            Write("\e[A");
-            return (T)this;
-        }
-
-        Write($"\e[{amount}A");
-        return (T)this;
     }
 }

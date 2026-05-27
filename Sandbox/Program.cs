@@ -1,12 +1,17 @@
 ﻿
 using LasseVK.Console.Ansi;
 
-for (int i = 1; i <= 3; i++)
+AnsiTextWriter ansiConsole = Console.Out.WithAnsi();
+ansiConsole.HideCursor();
+
+ansiConsole.Strike();
+for (int i = 0; i <= 40; i++)
 {
-    Console.WriteLine(i);
+    Thread.Sleep(50);
+    Console.Out.Write("A");
 }
+ansiConsole.ResetRendering();
 
-Thread.Sleep(1000);
-Console.Out.WithAnsi().MoveUp(2);
-
-Console.WriteLine("Hello world");
+// ansiConsole.ClearToBeginningOfLine();
+ansiConsole.ShowCursor();
+Console.WriteLine();
