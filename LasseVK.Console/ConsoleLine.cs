@@ -30,6 +30,11 @@ public class ConsoleLine : IDisposable
     {
         ArgumentNullException.ThrowIfNull(text);
 
+        if (text.Length >= System.Console.WindowWidth)
+        {
+            text = text[..(System.Console.WindowWidth - 1)];
+        }
+
         if (text == Text)
         {
             return;

@@ -5,16 +5,19 @@ using LasseVK.Console;
 
 using var lines = new ConsoleLines(10);
 
-for (int index = 0; index < 100; index++)
+traverse(@"/Users/lassevk/Dev");
+
+void traverse(string folderPath)
 {
-    var dt = DateTime.Now;
-    if (dt.Second % 5 == 0)
-        lines.Set(Random.Shared.Next(10), dt.ToString("HH:mm"));
-    else
-        lines.Set(Random.Shared.Next(10), dt.ToString("HH:mm:ss"));
+    lines.ScrollDownAndAppend(folderPath);
 
-    if (dt.Second % 7 == 0)
-        lines.Insert(0, "new line");
+    foreach (string subFolderPath in Directory.GetDirectories(folderPath))
+    {
+        traverse(subFolderPath);
+    }
 
-    Thread.Sleep(100);
+    // foreach (string filePath in Directory.GetFiles(folderPath))
+    // {
+    //     lines.ScrollDownAndAppend(filePath);
+    // }
 }

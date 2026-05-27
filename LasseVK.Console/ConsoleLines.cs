@@ -40,11 +40,19 @@ public class ConsoleLines : IDisposable
     {
     }
 
+    public string this[int index]
+    {
+        get => _lines[index].Text;
+        set => Set(index, value);
+    }
+
     public void Set(int index, string text)
     {
+        _ansiWriter.HideCursor();
         _ansiWriter.MoveUp(_lines.Count - index);
         _lines[index].Set(text);
         _ansiWriter.MoveBeginningOfLinesDown(_lines.Count - index);
+        _ansiWriter.ShowCursor();
     }
 
     public void Remove(int index)
@@ -84,14 +92,29 @@ public class ConsoleLines : IDisposable
 
     public void Clear()
     {
-        while (_lines.Count > 0)
+        _ansiWriter.HideCursor();
+        for (int index = _lines.Count - 1; index >= 0; index--)
         {
-            Remove(_lines.Count - 1);
+            _ansiWriter.MoveBeginningOfLinesUp();
+            _lines[index].Dispose();
         }
+
+        _ansiWriter.ShowCursor();
+        _lines.Clear();
     }
 
     public void Dispose()
     {
         Clear();
+    }
+
+    public void ScrollDownAndAppend(string line)
+    {
+        for (int index = 0; index < _lines.Count - 1; index++)
+        {
+            Set(index, _lines[index + 1].Text);
+        }
+
+        Set(_lines.Count - 1, line);
     }
 }
