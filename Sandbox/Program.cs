@@ -1,17 +1,13 @@
 ﻿
-using LasseVK.Console.Ansi;
+using LasseVK.Console;
 
-AnsiTextWriter ansiConsole = Console.Out.WithAnsi();
-ansiConsole.HideCursor();
+var line = new ConsoleLine();
 
-ansiConsole.Strike();
-for (int i = 0; i <= 40; i++)
+while (true)
 {
-    Thread.Sleep(50);
-    Console.Out.Write("A");
+    var dt = DateTime.Now;
+    if (dt.Second % 5 == 0)
+        line.Set(dt.ToString("HH:mm"));
+    else
+        line.Set(dt.ToString("HH:mm:ss"));
 }
-ansiConsole.ResetRendering();
-
-// ansiConsole.ClearToBeginningOfLine();
-ansiConsole.ShowCursor();
-Console.WriteLine();
