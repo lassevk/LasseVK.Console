@@ -1,1 +1,4 @@
-<Solution />
+<Solution>
+  <Project Path="LasseVK.Console/LasseVK.Console.csproj" />
+  <Project Path="Sandbox/Sandbox.csproj" />
+</Solution>
