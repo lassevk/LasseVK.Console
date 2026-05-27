@@ -2,9 +2,8 @@ using LasseVK.Console.Ansi;
 
 namespace LasseVK.Console;
 
-public class ConsoleLine
+public class ConsoleLine : IDisposable
 {
-    private string _text;
     private readonly AnsiTextWriter _ansiWriter;
     private readonly TextWriter _writer;
 
@@ -14,7 +13,7 @@ public class ConsoleLine
 
         _writer = writer ?? System.Console.Out;
         _ansiWriter = _writer.WithAnsi();
-        _text = text;
+        Text = text;
         _ansiWriter.MoveToColumn();
         if (text != "")
         {
@@ -23,18 +22,20 @@ public class ConsoleLine
         _ansiWriter.ClearToEndOfLine();
     }
 
+    public string Text { get; private set; }
+
     public void Clear() => Set("");
 
     public void Set(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        if (text == _text)
+        if (text == Text)
         {
             return;
         }
 
-        int index = IndexOfFirstDifference(_text, text);
+        int index = IndexOfFirstDifference(Text, text);
         _ansiWriter.HideCursor();
         if (index == 0)
         {
@@ -48,7 +49,7 @@ public class ConsoleLine
         }
         _ansiWriter.ClearToEndOfLine();
         _ansiWriter.ShowCursor();
-        _text = text;
+        Text = text;
     }
 
     private int IndexOfFirstDifference(string text1, string text2)
@@ -62,5 +63,10 @@ public class ConsoleLine
             }
         }
         return length;
+    }
+
+    public void Dispose()
+    {
+        Set("");
     }
 }

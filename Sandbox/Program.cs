@@ -1,13 +1,20 @@
 ﻿
+using System.Globalization;
+
 using LasseVK.Console;
 
-var line = new ConsoleLine();
+using var lines = new ConsoleLines(10);
 
-while (true)
+for (int index = 0; index < 100; index++)
 {
     var dt = DateTime.Now;
     if (dt.Second % 5 == 0)
-        line.Set(dt.ToString("HH:mm"));
+        lines.Set(Random.Shared.Next(10), dt.ToString("HH:mm"));
     else
-        line.Set(dt.ToString("HH:mm:ss"));
+        lines.Set(Random.Shared.Next(10), dt.ToString("HH:mm:ss"));
+
+    if (dt.Second % 7 == 0)
+        lines.Insert(0, "new line");
+
+    Thread.Sleep(100);
 }
