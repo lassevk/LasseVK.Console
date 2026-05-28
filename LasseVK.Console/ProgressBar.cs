@@ -23,21 +23,20 @@ public static class ProgressBar
         int fraction = (int)Math.Floor((blockCount - Math.Floor(blockCount)) * 8);
 
         // result = "[                         ] 100.0%"
+        // result = "[                         ]  50.0%"
+        // result = "[                         ]   5.0%"
         //                     1         2         3
         //           0123456789012345678901234567890123
         target[0] = '[';
         target[26] = ']';
         target[27] = ' ';
         target[33] = '%';
-        int padding = 0;
-        if (percent < 10.0M)
+        int padding = percent switch
         {
-            padding = 2;
-        }
-        else if (percent < 100.0M)
-        {
-            padding = 1;
-        }
+            < 10.0M  => 2,
+            < 100.0M => 1,
+            _        => 0,
+        };
 
         target[28] = ' ';
         target[29] = ' ';
