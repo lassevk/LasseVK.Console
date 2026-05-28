@@ -41,12 +41,19 @@ public class ConsoleLine : IDisposable
         _ansiWriter.ClearToEndOfLine();
     }
 
+    /// <summary>
+    /// Gets or sets the text displayed on the line. This will immediately update the on-screen
+    /// representation of the line.
+    /// </summary>
     public string Text
     {
         get => _text;
         set => Set(value);
     }
 
+    /// <summary>
+    /// Clears the text displayed on the line. Similar to setting <see cref="Text"/> to an empty string.
+    /// </summary>
     public void Clear() => Set("");
 
     private void Set(string text)
@@ -93,6 +100,7 @@ public class ConsoleLine : IDisposable
         return length;
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         Set("");
