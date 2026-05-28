@@ -3,18 +3,48 @@ using System.Text;
 
 namespace LasseVK.Console;
 
+/// <summary>
+/// This class provides static methods for formatting progress bars.
+/// </summary>
 public static class ProgressBar
 {
+    /// <summary>
+    /// This is the length of the progress bar. If you provide a character buffer,
+    /// it must be at least this length.
+    /// </summary>
     public const int Length = 34;
 
     private static readonly char[] _blocks = [' ', '\u258f', '\u258e', '\u258d', '\u258c', '\u258b', '\u258a', '\u2589', '\u2588'];
 
+    /// <summary>
+    /// Formats the progress bar to the specified buffer.
+    /// </summary>
+    /// <param name="target">
+    /// The buffer to write the progress bar to. This must be at least <see cref="Length"/> characters long.
+    /// </param>
+    /// <param name="progress">
+    /// The current progress of the process or what the progress bar represents.
+    /// Range from 0 to <paramref name="total"/>, inclusive.
+    /// </param>
+    /// <param name="total">
+    /// The total amount of progress that can be made.
+    /// </param>
+    /// <exception cref="InvalidOperationException">
+    /// The buffer is too small.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if <paramref name="progress"/> or <paramref name="total"/> is less than zero.
+    /// Thrown if <paramref name="progress"/> is greater than <paramref name="total"/>.
+    /// </exception>
     public static void FormatTo(Span<char> target, int progress, int total)
     {
         if (target.Length < Length)
         {
             throw new InvalidOperationException("Target buffer is too small");
         }
+        ArgumentOutOfRangeException.ThrowIfLessThan(progress, 0);
+        ArgumentOutOfRangeException.ThrowIfLessThan(total, 0);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(progress, total, "Progress cannot be greater than total");
 
         decimal percent = progress * 100.0M / total;
         decimal blockCount = percent / 4M;
@@ -65,6 +95,20 @@ public static class ProgressBar
 
     }
 
+    /// <summary>
+    /// Formats the progress bar and returns it as a string.
+    /// </summary>
+    /// <param name="progress">
+    /// The current progress of the process or what the progress bar represents.
+    /// Range from 0 to <paramref name="total"/>, inclusive.
+    /// </param>
+    /// <param name="total">
+    /// The total amount of progress that can be made.
+    /// </param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if <paramref name="progress"/> or <paramref name="total"/> is less than zero.
+    /// Thrown if <paramref name="progress"/> is greater than <paramref name="total"/>.
+    /// </exception>
     public static string Format(int progress, int total)
     {
         Span<char> buffer = stackalloc char[Length];
@@ -72,15 +116,59 @@ public static class ProgressBar
         return buffer.ToString();
     }
 
+    /// <summary>
+    /// Formats the progress bar to the specified <see cref="StringBuilder"/>.
+    /// </summary>
+    /// <param name="target">
+    /// The buffer to write the progress bar to. This must be at least <see cref="Length"/> characters long.
+    /// </param>
+    /// <param name="progress">
+    /// The current progress of the process or what the progress bar represents.
+    /// Range from 0 to <paramref name="total"/>, inclusive.
+    /// </param>
+    /// <param name="total">
+    /// The total amount of progress that can be made.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if <paramref name="target"/> is <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if <paramref name="progress"/> or <paramref name="total"/> is less than zero.
+    /// Thrown if <paramref name="progress"/> is greater than <paramref name="total"/>.
+    /// </exception>
     public static void FormatTo(StringBuilder target, int progress, int total)
     {
+        ArgumentNullException.ThrowIfNull(target);
+
         Span<char> buffer = stackalloc char[Length];
         FormatTo(buffer, progress, total);
         target.Append(buffer);
     }
 
+    /// <summary>
+    /// Formats the progress bar and writes it to the specified <see cref="TextWriter"/>.
+    /// </summary>
+    /// <param name="target">
+    /// The buffer to write the progress bar to. This must be at least <see cref="Length"/> characters long.
+    /// </param>
+    /// <param name="progress">
+    /// The current progress of the process or what the progress bar represents.
+    /// Range from 0 to <paramref name="total"/>, inclusive.
+    /// </param>
+    /// <param name="total">
+    /// The total amount of progress that can be made.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if <paramref name="target"/> is <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if <paramref name="progress"/> or <paramref name="total"/> is less than zero.
+    /// Thrown if <paramref name="progress"/> is greater than <paramref name="total"/>.
+    /// </exception>
     public static void FormatTo(TextWriter target, int progress, int total)
     {
+        ArgumentNullException.ThrowIfNull(target);
+
         Span<char> buffer = stackalloc char[Length];
         FormatTo(buffer, progress, total);
         target.Write(buffer);
