@@ -72,18 +72,26 @@ public class ConsoleLine : IDisposable
 
         int index = IndexOfFirstDifference(Text, text);
         _ansiWriter.HideCursor();
-        if (index == 0)
+        try
         {
-            _ansiWriter.MoveToColumn();
-            _writer.Write(text);
+            if (index == 0)
+            {
+                _ansiWriter.MoveToColumn();
+                _writer.Write(text);
+            }
+            else
+            {
+                _ansiWriter.MoveToColumn(index + 1);
+                _writer.Write(text[index..]);
+            }
+
+            _ansiWriter.ClearToEndOfLine();
         }
-        else
+        finally
         {
-            _ansiWriter.MoveToColumn(index + 1);
-            _writer.Write(text[index..]);
+            _ansiWriter.ShowCursor();
         }
-        _ansiWriter.ClearToEndOfLine();
-        _ansiWriter.ShowCursor();
+
         _text = text;
     }
 
