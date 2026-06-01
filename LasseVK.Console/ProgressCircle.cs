@@ -20,7 +20,13 @@ public static class ProgressCircle
         System.Console.OutputEncoding = Encoding.UTF8;
     }
 
-    private static readonly char[] _circles = ['\u25cb', '\u25d4', '\u25d1', '\u25d5', '\u25cf'];
+    // ReSharper disable InconsistentNaming
+    private const char WHITE_CIRCLE = '\u25cb';
+    private const char CIRCLE_WITH_UPPER_RIGHT_QUADRANT_BLACK = '\u25d4';
+    private const char CIRCLE_WITH_RIGHT_HALF_BLACK = '\u25d1';
+    private const char CIRCLE_WITH_ALL_BUT_UPPER_LEFT_QUADRANT_BLACK = '\u25d5';
+    private const char BLACK_CIRCLE = '\u25cf';
+    // ReSharper restore InconsistentNaming
 
     /// <summary>
     /// Formats the progress circle to the specified buffer.
@@ -61,11 +67,11 @@ public static class ProgressCircle
         //           01234567
         target[0] = ppm switch
         {
-            <= 125 => _circles[0]
-          , <= 375 => _circles[1]
-          , <= 625 => _circles[2]
-          , <= 875 => _circles[3]
-          , _      => _circles[4]
+            <= 125 => WHITE_CIRCLE
+          , <= 375 => CIRCLE_WITH_UPPER_RIGHT_QUADRANT_BLACK
+          , <= 625 => CIRCLE_WITH_RIGHT_HALF_BLACK
+          , <= 875 => CIRCLE_WITH_ALL_BUT_UPPER_LEFT_QUADRANT_BLACK
+          , _      => BLACK_CIRCLE
            ,
         };
         target[1] = ' ';

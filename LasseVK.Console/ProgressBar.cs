@@ -19,7 +19,18 @@ public static class ProgressBar
         System.Console.OutputEncoding = Encoding.UTF8;
     }
 
-    private static readonly char[] _blocks = [' ', '\u258f', '\u258e', '\u258d', '\u258c', '\u258b', '\u258a', '\u2589', '\u2588'];
+    // ReSharper disable InconsistentNaming
+    private const char RIGHT_ONE_EIGHTH_BLOCK = '\u2595';
+
+    private const char LEFT_ONE_EIGHTH_BLOCK = '\u258f';
+    private const char LEFT_ONE_QUARTER_BLOCK = '\u258e';
+    private const char LEFT_THREE_EIGHTHS_BLOCK = '\u258d';
+    private const char LEFT_HALF_BLOCK = '\u258c';
+    private const char LEFT_FIVE_EIGHTHS_BLOCK = '\u258b';
+    private const char LEFT_THREE_QUARTERS_BLOCK = '\u258a';
+    private const char LEFT_SEVEN_EIGHTHS_BLOCK = '\u2589';
+    private const char FULL_BLOCK = '\u2588';
+    // ReSharper restore InconsistentNaming
 
     /// <summary>
     /// Formats the progress bar to the specified buffer.
@@ -62,8 +73,8 @@ public static class ProgressBar
         // result = "[                         ]   5.0%"
         //                     1         2         3
         //           0123456789012345678901234567890123
-        target[0] = '\u2595'; // '[';
-        target[26] = '\u258f'; // ']';
+        target[0] = RIGHT_ONE_EIGHTH_BLOCK;
+        target[26] = LEFT_ONE_EIGHTH_BLOCK;
         target[27] = ' ';
         target[33] = '%';
         int padding = percent switch
@@ -79,12 +90,22 @@ public static class ProgressBar
 
         for (int index = 0; index < whole; index++)
         {
-            target[index + 1] = '\u2588';
+            target[index + 1] = FULL_BLOCK;
         }
 
         if (fraction != 0)
         {
-            target[whole + 1] = _blocks[fraction];
+            target[whole + 1] = fraction switch
+            {
+                1 => LEFT_ONE_EIGHTH_BLOCK,
+                2 => LEFT_ONE_QUARTER_BLOCK,
+                3 => LEFT_THREE_EIGHTHS_BLOCK,
+                4 => LEFT_HALF_BLOCK,
+                5 => LEFT_FIVE_EIGHTHS_BLOCK,
+                6 => LEFT_THREE_QUARTERS_BLOCK,
+                7 => LEFT_SEVEN_EIGHTHS_BLOCK,
+                _ => throw new ArgumentOutOfRangeException(nameof(fraction), fraction, null),
+            };
             for (int index = whole + 1; index < 25; index++)
             {
                 target[index + 1] = ' ';
