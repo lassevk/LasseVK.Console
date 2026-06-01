@@ -4,31 +4,32 @@ using System.Text;
 namespace LasseVK.Console;
 
 /// <summary>
-/// This class provides static methods for formatting progress bars.
+/// This class provides static methods for formatting progress circles, small circles that
+/// show progress in 25% increments.
 /// </summary>
-public static class ProgressBar
+public static class ProgressCircle
 {
     /// <summary>
-    /// This is the length of the progress bar. If you provide a character buffer,
-    /// it must be at least this length.
+    /// This is the length of the text output for the progress circle.
+    /// If you provide a character buffer, it must be at least this length.
     /// </summary>
-    public const int Length = 34;
+    public const int Length = 8;
 
-    static ProgressBar()
+    static ProgressCircle()
     {
         System.Console.OutputEncoding = Encoding.UTF8;
     }
 
-    private static readonly char[] _blocks = [' ', '\u258f', '\u258e', '\u258d', '\u258c', '\u258b', '\u258a', '\u2589', '\u2588'];
+    private static readonly char[] _circles = ['\u25cb', '\u25d4', '\u25d1', '\u25d5', '\u25cf'];
 
     /// <summary>
-    /// Formats the progress bar to the specified buffer.
+    /// Formats the progress circle to the specified buffer.
     /// </summary>
     /// <param name="target">
-    /// The buffer to write the progress bar to. This must be at least <see cref="Length"/> characters long.
+    /// The buffer to write the progress circle to. This must be at least <see cref="Length"/> characters long.
     /// </param>
     /// <param name="progress">
-    /// The current progress of the process or what the progress bar represents.
+    /// The current progress of the process or what the progress circle represents.
     /// Range from 0 to <paramref name="total"/>, inclusive.
     /// </param>
     /// <param name="total">
@@ -52,20 +53,24 @@ public static class ProgressBar
         ArgumentOutOfRangeException.ThrowIfGreaterThan(progress, total, "Progress cannot be greater than total");
 
         decimal percent = progress * 100.0M / total;
-        decimal blockCount = percent / 4M;
+        decimal ppm = (int)(percent * 10m);
 
-        int whole = (int)Math.Floor(blockCount);
-        int fraction = (int)Math.Floor((blockCount - Math.Floor(blockCount)) * 8);
-
-        // result = "[                         ] 100.0%"
-        // result = "[                         ]  50.0%"
-        // result = "[                         ]   5.0%"
-        //                     1         2         3
-        //           0123456789012345678901234567890123
-        target[0] = '\u2595'; // '[';
-        target[26] = '\u258f'; // ']';
-        target[27] = ' ';
-        target[33] = '%';
+        // result = "O 100.0%"
+        // result = "O  50.0%"
+        // result = "O   5.0%"
+        //           01234567
+        target[0] = ppm switch
+        {
+            <= 125 => _circles[0]
+          , <= 375 => _circles[1]
+          , <= 625 => _circles[2]
+          , <= 875 => _circles[3]
+          , _      => _circles[4]
+           ,
+        };
+        target[1] = ' ';
+        target[2] = ' ';
+        target[7] = '%';
         int padding = percent switch
         {
             < 10.0M  => 2,
@@ -73,38 +78,14 @@ public static class ProgressBar
             _        => 0,
         };
 
-        target[28] = ' ';
-        target[29] = ' ';
-        percent.TryFormat(target[(28 + padding)..], out int _, "0.0", CultureInfo.InvariantCulture);
-
-        for (int index = 0; index < whole; index++)
-        {
-            target[index + 1] = '\u2588';
-        }
-
-        if (fraction != 0)
-        {
-            target[whole + 1] = _blocks[fraction];
-            for (int index = whole + 1; index < 25; index++)
-            {
-                target[index + 1] = ' ';
-            }
-        }
-        else
-        {
-            for (int index = whole; index < 25; index++)
-            {
-                target[index + 1] = ' ';
-            }
-        }
-
+        percent.TryFormat(target[(2 + padding)..], out int _, "0.0", CultureInfo.InvariantCulture);
     }
 
     /// <summary>
-    /// Formats the progress bar and returns it as a string.
+    /// Formats the progress circle and returns it as a string.
     /// </summary>
     /// <param name="progress">
-    /// The current progress of the process or what the progress bar represents.
+    /// The current progress of the process or what the progress circle represents.
     /// Range from 0 to <paramref name="total"/>, inclusive.
     /// </param>
     /// <param name="total">
@@ -122,13 +103,13 @@ public static class ProgressBar
     }
 
     /// <summary>
-    /// Formats the progress bar to the specified <see cref="StringBuilder"/>.
+    /// Formats the progress circle to the specified <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="target">
-    /// The buffer to write the progress bar to. This must be at least <see cref="Length"/> characters long.
+    /// The buffer to write the progress circle to. This must be at least <see cref="Length"/> characters long.
     /// </param>
     /// <param name="progress">
-    /// The current progress of the process or what the progress bar represents.
+    /// The current progress of the process or what the progress circle represents.
     /// Range from 0 to <paramref name="total"/>, inclusive.
     /// </param>
     /// <param name="total">
@@ -151,13 +132,13 @@ public static class ProgressBar
     }
 
     /// <summary>
-    /// Formats the progress bar and writes it to the specified <see cref="TextWriter"/>.
+    /// Formats the progress circle and writes it to the specified <see cref="TextWriter"/>.
     /// </summary>
     /// <param name="target">
-    /// The buffer to write the progress bar to. This must be at least <see cref="Length"/> characters long.
+    /// The buffer to write the progress circle to. This must be at least <see cref="Length"/> characters long.
     /// </param>
     /// <param name="progress">
-    /// The current progress of the process or what the progress bar represents.
+    /// The current progress of the process or what the progress circle represents.
     /// Range from 0 to <paramref name="total"/>, inclusive.
     /// </param>
     /// <param name="total">
