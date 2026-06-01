@@ -2,18 +2,37 @@ using LasseVK.Console.Ansi;
 
 namespace LasseVK.Console;
 
+/// <summary>
+/// This class represents a line of text in the console, providing methods for manipulating and displaying text, doing
+/// optimal replacement of the actual text on screen.
+/// </summary>
 public class ConsoleLine : IDisposable
 {
     private readonly AnsiTextWriter _ansiWriter;
     private readonly TextWriter _writer;
 
+    private string _text;
+
+    /// <summary>
+    /// Constructs a new instance of the <see cref="ConsoleLine"/> class.
+    /// </summary>
+    /// <param name="text">
+    /// The initial text to display on the line.
+    /// </param>
+    /// <param name="writer">
+    /// The <see cref="TextWriter"/> to use for writing text to the console. Defaults
+    /// to <see cref="System.Console.Out"/>.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if <paramref name="text"/> is <see langword="null"/>.
+    /// </exception>
     public ConsoleLine(string text = "", TextWriter? writer = null)
     {
         ArgumentNullException.ThrowIfNull(text);
 
         _writer = writer ?? System.Console.Out;
         _ansiWriter = _writer.WithAnsi();
-        Text = text;
+        _text = text;
         _ansiWriter.MoveToColumn();
         if (text != "")
         {
@@ -22,11 +41,22 @@ public class ConsoleLine : IDisposable
         _ansiWriter.ClearToEndOfLine();
     }
 
-    public string Text { get; private set; }
+    /// <summary>
+    /// Gets or sets the text displayed on the line. This will immediately update the on-screen
+    /// representation of the line.
+    /// </summary>
+    public string Text
+    {
+        get => _text;
+        set => Set(value);
+    }
 
+    /// <summary>
+    /// Clears the text displayed on the line. Similar to setting <see cref="Text"/> to an empty string.
+    /// </summary>
     public void Clear() => Set("");
 
-    public void Set(string text)
+    private void Set(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -35,7 +65,7 @@ public class ConsoleLine : IDisposable
             text = text[..(System.Console.WindowWidth - 1)];
         }
 
-        if (text == Text)
+        if (text == _text)
         {
             return;
         }
@@ -54,7 +84,7 @@ public class ConsoleLine : IDisposable
         }
         _ansiWriter.ClearToEndOfLine();
         _ansiWriter.ShowCursor();
-        Text = text;
+        _text = text;
     }
 
     private int IndexOfFirstDifference(string text1, string text2)
@@ -70,6 +100,7 @@ public class ConsoleLine : IDisposable
         return length;
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         Set("");

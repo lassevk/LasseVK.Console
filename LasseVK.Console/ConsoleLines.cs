@@ -35,7 +35,7 @@ public class ConsoleLines : IDisposable
             _writer.WriteLine();
         }
 
-        _lines = Enumerable.Range(0, count).Select(i => new ConsoleLine()).ToList();
+        _lines = Enumerable.Range(0, count).Select(_ => new ConsoleLine()).ToList();
     }
 
     /// <summary>
@@ -116,7 +116,7 @@ public class ConsoleLines : IDisposable
             _ansiWriter.MoveUp(_lines.Count - index);
             try
             {
-                _lines[index].Set(text);
+                _lines[index].Text = text;
             }
             finally
             {
@@ -146,7 +146,7 @@ public class ConsoleLines : IDisposable
         _ansiWriter.MoveUp(_lines.Count - index);
         while (index < _lines.Count - 1)
         {
-            _lines[index].Set(_lines[index + 1].Text);
+            _lines[index].Text = _lines[index + 1].Text;
             _ansiWriter.MoveBeginningOfLinesDown();
             index++;
         }
