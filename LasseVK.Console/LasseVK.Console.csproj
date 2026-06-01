@@ -21,6 +21,12 @@
       <Compile Update="Ansi\AnsiWriter.Rendering.cs">
         <DependentUpon>AnsiWriter.cs</DependentUpon>
       </Compile>
+      <Compile Update="Ansi\AnsiStringBuilder.cs">
+        <DependentUpon>AnsiWriter.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Ansi\AnsiTextWriter.cs">
+        <DependentUpon>AnsiWriter.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
