@@ -31,4 +31,31 @@ public class AnsiStringBuilderTests
 
         Assert.Equal(expected, output);
     }
+
+    [Theory]
+    [InlineData(0, "")]
+    [InlineData(1, "\e[D")]
+    [InlineData(2, "\e[2D")]
+    [InlineData(17, "\e[17D")]
+    public void MoveLeft_WithTestCases(int amount, string expected)
+    {
+        var writer = new AnsiStringBuilder(new StringBuilder());
+        string output = writer.MoveLeft(amount).Target.ToString();
+
+        Assert.Equal(expected, output);
+    }
+
+    [Theory]
+    [InlineData(0, "")]
+    [InlineData(1, "\e[C")]
+    [InlineData(2, "\e[2C")]
+    [InlineData(17, "\e[17C")]
+    public void MoveRight_WithTestCases(int amount, string expected)
+    {
+        var writer = new AnsiStringBuilder(new StringBuilder());
+        string output = writer.MoveRight(amount).Target.ToString();
+
+        Assert.Equal(expected, output);
+    }
+
 }
