@@ -18,19 +18,13 @@ public partial class AnsiWriter<T>
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(amount, 0);
 
-        switch (amount)
+        return amount switch
         {
-            case 0:
-                return (T)this;
-
-            case 1:
-                Write("\e[A");
-                return (T)this;
-
-            default:
-                Write($"\e[{amount}A");
-                return (T)this;
-        }
+            0 => (T)this
+          , 1 => Write("\e[A")
+          , _ => Write($"\e[{amount}A")
+           ,
+        };
     }
 
     /// <summary>
@@ -52,7 +46,7 @@ public partial class AnsiWriter<T>
         return amount switch
         {
             0 => (T)this
-          , 1 => Write("\e[b")
+          , 1 => Write("\e[B")
           , _ => Write($"\e[{amount}B"),
         };
     }
@@ -180,7 +174,7 @@ public partial class AnsiWriter<T>
         return column switch
         {
             1 => Write("\e[G")
-          , _ => Write($"\e[{column}G")
+          , _ => Write($"\e[{column}G"),
         };
     }
 
@@ -216,7 +210,7 @@ public partial class AnsiWriter<T>
         {
             1 when row == 1 => Write($"\e[;H")
           , 1               => Write($"\e[{row};H")
-          , _               => row == 1 ? Write($"\e[;{column}H") : Write($"\e[{row};{column}H")
+          , _               => row == 1 ? Write($"\e[;{column}H") : Write($"\e[{row};{column}H"),
         };
     }
 
