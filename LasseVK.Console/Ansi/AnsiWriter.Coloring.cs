@@ -57,5 +57,5 @@ public partial class AnsiWriter<T>
     /// <returns>
     /// The writer, for chaining.
     /// </returns>
-    public T SetBackgroundColor(byte red, byte green, byte blue) => Write($"\e[38;2;{red};{green};{blue}m");
+    public T SetBackgroundColor(byte red, byte green, byte blue) => Write($"\e[48;2;{red};{green};{blue}m");
 }

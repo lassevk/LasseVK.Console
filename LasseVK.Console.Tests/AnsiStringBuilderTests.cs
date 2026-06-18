@@ -148,4 +148,17 @@ public class AnsiStringBuilderTests
         Assert.Equal(expected.Replace("\e", "\\e"), output.Replace("\e", "\\e"));
     }
 
+    [Theory]
+    [InlineData(0, 0, 0, "\e[48;2;0;0;0m")]
+    [InlineData(255, 0, 0, "\e[48;2;255;0;0m")]
+    [InlineData(0, 255, 0, "\e[48;2;0;255;0m")]
+    [InlineData(0, 0, 255, "\e[48;2;0;0;255m")]
+    [InlineData(128, 192, 255, "\e[48;2;128;192;255m")]
+    public void SetBackgroundColor_Rgb_WithTestCases(byte red, byte green, byte blue, string expected)
+    {
+        var writer = new AnsiStringBuilder(new StringBuilder());
+        string output = writer.SetBackgroundColor(red, green, blue).Target.ToString();
+
+        Assert.Equal(expected.Replace("\e", "\\e"), output.Replace("\e", "\\e"));
+    }
 }
