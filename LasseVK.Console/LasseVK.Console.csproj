@@ -27,6 +27,9 @@
       <Compile Update="Ansi\AnsiTextWriter.cs">
         <DependentUpon>AnsiWriter.cs</DependentUpon>
       </Compile>
+      <Compile Update="Ansi\AnsiWriter.Coloring.cs">
+        <DependentUpon>AnsiWriter.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
