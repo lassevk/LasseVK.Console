@@ -101,7 +101,7 @@ public class AnsiStringBuilderTests
     [InlineData(AnsiColor.Magenta | AnsiColor.HighIntensity, "\e[38;5;13m")]
     [InlineData(AnsiColor.Cyan | AnsiColor.HighIntensity, "\e[38;5;14m")]
     [InlineData(AnsiColor.White | AnsiColor.HighIntensity, "\e[38;5;15m")]
-    public void SetForegroundColor_WithTestCases(AnsiColor color, string expected)
+    public void SetForegroundColor_AnsiColor_WithTestCases(AnsiColor color, string expected)
     {
         var writer = new AnsiStringBuilder(new StringBuilder());
         string output = writer.SetForegroundColor(color).Target.ToString();
@@ -126,11 +126,26 @@ public class AnsiStringBuilderTests
     [InlineData(AnsiColor.Magenta | AnsiColor.HighIntensity, "\e[48;5;13m")]
     [InlineData(AnsiColor.Cyan | AnsiColor.HighIntensity, "\e[48;5;14m")]
     [InlineData(AnsiColor.White | AnsiColor.HighIntensity, "\e[48;5;15m")]
-    public void SetBackgroundColor_WithTestCases(AnsiColor color, string expected)
+    public void SetBackgroundColor_AnsiColor_WithTestCases(AnsiColor color, string expected)
     {
         var writer = new AnsiStringBuilder(new StringBuilder());
         string output = writer.SetBackgroundColor(color).Target.ToString();
 
         Assert.Equal(expected.Replace("\e", "\\e"), output.Replace("\e", "\\e"));
     }
+
+    [Theory]
+    [InlineData(0, 0, 0, "\e[38;2;0;0;0m")]
+    [InlineData(255, 0, 0, "\e[38;2;255;0;0m")]
+    [InlineData(0, 255, 0, "\e[38;2;0;255;0m")]
+    [InlineData(0, 0, 255, "\e[38;2;0;0;255m")]
+    [InlineData(128, 192, 255, "\e[38;2;128;192;255m")]
+    public void SetForegroundColor_Rgb_WithTestCases(byte red, byte green, byte blue, string expected)
+    {
+        var writer = new AnsiStringBuilder(new StringBuilder());
+        string output = writer.SetForegroundColor(red, green, blue).Target.ToString();
+
+        Assert.Equal(expected.Replace("\e", "\\e"), output.Replace("\e", "\\e"));
+    }
+
 }
